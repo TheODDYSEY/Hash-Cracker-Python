@@ -39,13 +39,23 @@ def crack_hash(hash, wordlist, hash_type=None):
         for line in tqdm(f, desc='Cracking hash', total=total_lines):
             if hash_fn(line.strip().encode()).hexdigest() == hash:
                 return line
-            
+
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description='Crack a hash using a wordlist.')
     parser.add_argument('hash', help='The hash to crack.')
     parser.add_argument('wordlist', help='The path to the wordlist.')
     parser.add_argument('--hash-type', help='The hash type to use.', default='md5')
     args = parser.parse_args()
     print()
-    print("[+] Found password:", crack_hash(args.hash, args.wordlist, args.hash_type))            
+
+    try:
+        password = crack_hash(args.hash, args.wordlist, args.hash_type)
+        if password:
+            print("[+] Found password:", password.strip())
+        else:
+            print("[-] Password not found in the wordlist.")
+    except UnicodeDecodeError:
+        print("[-] Error: Unable to decode the wordlist file. Please ensure it's in UTF-8 encoding.")
