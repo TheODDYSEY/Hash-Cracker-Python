@@ -1,4 +1,3 @@
----
 
 # Hash Cracker Python
 
